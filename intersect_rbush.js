@@ -3,18 +3,20 @@ const intersect = require('@turf/intersect')
 const bounding_box = require('@turf/bbox')
 const rbush = require('rbush')
 
+
 console.time('everything')
 
 // Specify unique ID fields for outer and inner sets of data
-const inner_id_field = 'uID'
 const outer_id_field = 'OBJECTID'
+const inner_id_field = 'uID'
 
 // Load outer and inner geodata files
-const inner = JSON.parse(fs.readFileSync('nam.villages.geojson')).features//.slice(0, 10)
-const outer = JSON.parse(fs.readFileSync('nam.constituencies.geojson')).features//.slice(0, 10)
+const outer = JSON.parse(fs.readFileSync('nam.constituencies.geojson')).features
+const inner = JSON.parse(fs.readFileSync('nam.villages.geojson')).features//.slice(0, 100)
 
 // Bounding boxes for everything
 console.time('bboxes')
+
 function bbox_and_id(feature, field, type) {
   const bbox = bounding_box(feature.geometry)
   return {
@@ -27,6 +29,7 @@ function bbox_and_id(feature, field, type) {
     feature
   }
 }
+
 const inner_bboxes = inner.map(f => bbox_and_id(f, inner_id_field, 'inner'))
 const outer_bboxes = outer.map(f => bbox_and_id(f, outer_id_field, 'outer'))
 console.timeEnd('bboxes')
@@ -68,5 +71,4 @@ const grouped_by_bbox = outer.map(outer_feature => {
 console.timeEnd('intersect')
 
 console.timeEnd('everything')
-
 

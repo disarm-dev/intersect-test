@@ -4,7 +4,9 @@
   "description": "",
   "main": "intersect.js",
   "dependencies": {
-    "@turf/intersect": "^5.0.0"
+    "@turf/bbox": "^5.0.0",
+    "@turf/intersect": "^5.0.0",
+    "rbush": "^2.0.1"
   },
   "devDependencies": {},
   "scripts": {

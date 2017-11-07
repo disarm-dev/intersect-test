@@ -1,17 +1,21 @@
 const fs = require('fs')
 const intersect = require('@turf/intersect')
 
-const villages = JSON.parse(fs.readFileSync('nam.villages.geojson')).features.slice(0, 10)
-const cons = JSON.parse(fs.readFileSync('nam.constituencies.geojson')).features.slice(0, 10)
+const outer = JSON.parse(fs.readFileSync('nam.constituencies.geojson')).features
+const inner = JSON.parse(fs.readFileSync('nam.villages.geojson')).features//.slice(0, 100)
 
 console.time('intersect');
-big_result = cons.map(con => {
-    const con_result = villages.map(v => {
-        try {
-            const result = intersect(con, v)
-            if (result) return result
-        } catch (e) {}
-    }).filter(i => i)
-    return con_result
+const grouped_by_intersection = outer.map(outer => {
+  const intersected_inners = inner.map(inner => {
+    try {
+      const intersection_result = intersect(outer, inner)
+      if (intersection_result) return intersection_result
+    } catch (e) {
+    }
+  }).filter(i => i)
+  return {
+    outer: outer,
+    inners: intersected_inners
+  }
 });
 console.timeEnd('intersect')

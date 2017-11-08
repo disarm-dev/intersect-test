@@ -11,8 +11,10 @@ const outer_id_field = 'OBJECTID'
 const inner_id_field = 'uID'
 
 // Load outer and inner geodata files
+console.time('load')
 const outer = JSON.parse(fs.readFileSync('nam.constituencies.geojson')).features
 const inner = JSON.parse(fs.readFileSync('nam.villages.geojson')).features//.slice(0, 100)
+console.timeEnd('load')
 
 // Bounding boxes for everything
 console.time('bboxes')
@@ -39,9 +41,9 @@ console.log('outer_bboxes.length', outer_bboxes.length)
 
 // Create spatial index
 console.time('index')
-const all_bboxes = inner_bboxes.concat(outer_bboxes)
+const all_bboxes = inner_bboxes//.concat(outer_bboxes)
 const tree = rbush()
-const index = tree.load(all_bboxes)
+tree.load(all_bboxes)
 console.timeEnd('index')
 console.log('indexed', all_bboxes.length, 'bboxes')
 
